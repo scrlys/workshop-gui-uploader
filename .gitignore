@@ -1,0 +1,5 @@
+libsteam_api.so
+
+# This is the developer's gitignore for personal use
+.ycm_extra_conf.py
+builds/
