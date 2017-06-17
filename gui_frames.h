@@ -11,7 +11,7 @@
 enum
 {
     BUTTON_Create = wxID_HIGHEST + 1,
-    BUTTON_Update = wxID_HIGHEST + 2,
+    BUTTON_Update,
 };
 
 class App : public wxApp
