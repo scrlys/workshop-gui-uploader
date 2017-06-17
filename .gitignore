@@ -1,4 +1,5 @@
 libsteam_api.so
+steam_appid.txt
 
 # This is the developer's gitignore for personal use
 .ycm_extra_conf.py
