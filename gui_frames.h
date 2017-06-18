@@ -16,10 +16,12 @@ enum
     BUTTON_Update,
     TEXT_name,
     TEXT_description,
-    FILE_preview,
+    TEXT_preview,
+    BUTTON_preview,
     COMBO_language,
     COMBO_visibility,
-    FILE_path,
+    TEXT_path,
+    BUTTON_path,
     BUTTON_finish,
 };
 
@@ -68,8 +70,12 @@ public:
     void OnUpdateVisibility(wxCommandEvent& event);
     void OnUpdatePath(wxCommandEvent& event);
 
+    void OnBrowsePreview(wxCommandEvent& event);
+    void OnBrowsePath(wxCommandEvent& event);
+
     void OnFinish(wxCommandEvent& event);
 
+    wxDECLARE_EVENT_TABLE();
 public:
     UpdateFrame();
 };

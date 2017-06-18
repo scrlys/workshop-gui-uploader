@@ -20,6 +20,18 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 END_EVENT_TABLE()
 
+BEGIN_EVENT_TABLE(UpdateFrame, wxFrame)
+    EVT_TEXT(TEXT_name, UpdateFrame::OnUpdateName)
+    EVT_TEXT(TEXT_description, UpdateFrame::OnUpdateDescription)
+    EVT_TEXT(TEXT_preview, UpdateFrame::OnUpdatePreviewImage)
+    EVT_BUTTON(BUTTON_preview, UpdateFrame::OnBrowsePreview)
+    EVT_COMBOBOX(COMBO_language, UpdateFrame::OnUpdateLanguage)
+    EVT_COMBOBOX(COMBO_visibility, UpdateFrame::OnUpdateVisibility)
+    EVT_TEXT(TEXT_path, UpdateFrame::OnUpdatePath)
+    EVT_BUTTON(BUTTON_path, UpdateFrame::OnBrowsePreview)
+    EVT_BUTTON(BUTTON_finish, UpdateFrame::OnFinish)
+END_EVENT_TABLE()
+
 std::map<std::string, std::string> languages;
 
 bool App::OnInit()
@@ -112,6 +124,11 @@ void UpdateFrame::OnUpdatePreviewImage(wxCommandEvent& event)
     std::cerr << "prevew\n";
 }
 
+void UpdateFrame::OnUpdateLanguage(wxCommandEvent& event)
+{
+    std::cerr << "language\n";
+}
+
 void UpdateFrame::OnUpdateVisibility(wxCommandEvent& event)
 {
     std::cerr << "visibility\n";
@@ -120,6 +137,16 @@ void UpdateFrame::OnUpdateVisibility(wxCommandEvent& event)
 void UpdateFrame::OnUpdatePath(wxCommandEvent& event)
 {
     std::cerr << "update\n";
+}
+
+void UpdateFrame::OnBrowsePreview(wxCommandEvent& event)
+{
+    std::cerr << "browse preview\n";
+}
+
+void UpdateFrame::OnBrowsePath(wxCommandEvent& path)
+{
+    std::cerr << "browse path\n";
 }
 
 void UpdateFrame::OnFinish(wxCommandEvent& event)
@@ -143,12 +170,12 @@ UpdateFrame::UpdateFrame() : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
 {
     m_name = new wxTextCtrl(this, TEXT_name);
     m_description = new wxTextCtrl(this, TEXT_description, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
-    m_preview_path = new wxTextCtrl(this, wxID_ANY);
-    m_preview_select = new wxButton(this, FILE_preview, "Browse...");
+    m_preview_path = new wxTextCtrl(this, TEXT_preview);
+    m_preview_select = new wxButton(this, BUTTON_preview, "Browse...");
     m_language = new wxComboBox(this, COMBO_language, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, &get_keys(languages)[0], wxCB_READONLY);
     m_visibility = new wxComboBox(this, COMBO_visibility, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
-    m_path_path = new wxTextCtrl(this, wxID_ANY);
-    m_path_select = new wxButton(this, FILE_path, "Browse...");
+    m_path_path = new wxTextCtrl(this, TEXT_path);
+    m_path_select = new wxButton(this, BUTTON_path, "Browse...");
     m_finish = new wxButton(this, BUTTON_finish, "Finish");
 
     wxBoxSizer *vertical = new wxBoxSizer(wxVERTICAL);
