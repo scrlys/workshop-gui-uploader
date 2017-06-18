@@ -57,8 +57,8 @@ public:
     wxTextCtrl *m_description;
     wxTextCtrl *m_preview_path;
     wxButton *m_preview_select;
-    wxComboBox *m_language;
-    wxComboBox *m_visibility;
+    wxChoice *m_language;
+    wxChoice *m_visibility;
     wxTextCtrl *m_path_path;
     wxButton *m_path_select;
     wxButton *m_finish;

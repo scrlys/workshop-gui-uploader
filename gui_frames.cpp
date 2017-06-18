@@ -144,15 +144,19 @@ std::vector<wxString> get_keys(std::map<std::string, std::string> map)
 
 UpdateFrame::UpdateFrame() : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
 {
+    std::vector<wxString> display_languages = get_keys(languages);
+
     m_name = new wxTextCtrl(this, TEXT_name);
     m_description = new wxTextCtrl(this, TEXT_description, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
     m_preview_path = new wxTextCtrl(this, TEXT_preview);
     m_preview_select = new wxButton(this, BUTTON_preview, "Browse...");
-    m_language = new wxComboBox(this, COMBO_language, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, &get_keys(languages)[0], wxCB_READONLY);
-    m_visibility = new wxComboBox(this, COMBO_visibility, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY);
+    m_language = new wxChoice(this, COMBO_language, wxDefaultPosition, wxDefaultSize, display_languages.size(), &display_languages[0]);
+    m_visibility = new wxChoice(this, COMBO_visibility);
     m_path_path = new wxTextCtrl(this, TEXT_path);
     m_path_select = new wxButton(this, BUTTON_path, "Browse...");
     m_finish = new wxButton(this, BUTTON_finish, "Finish");
+
+    m_language->SetSelection(m_language->FindString("English"));
 
     wxBoxSizer *vertical = new wxBoxSizer(wxVERTICAL);
 
