@@ -19,7 +19,6 @@ enum
     TEXT_preview,
     BUTTON_preview,
     COMBO_language,
-    COMBO_visibility,
     TEXT_path,
     BUTTON_path,
     BUTTON_finish,
@@ -58,7 +57,6 @@ public:
     wxTextCtrl *m_preview_path;
     wxButton *m_preview_select;
     wxChoice *m_language;
-    wxChoice *m_visibility;
     wxTextCtrl *m_path_path;
     wxButton *m_path_select;
     wxButton *m_finish;

@@ -151,7 +151,6 @@ UpdateFrame::UpdateFrame() : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
     m_preview_path = new wxTextCtrl(this, TEXT_preview);
     m_preview_select = new wxButton(this, BUTTON_preview, "Browse...");
     m_language = new wxChoice(this, COMBO_language, wxDefaultPosition, wxDefaultSize, display_languages.size(), &display_languages[0]);
-    m_visibility = new wxChoice(this, COMBO_visibility);
     m_path_path = new wxTextCtrl(this, TEXT_path);
     m_path_select = new wxButton(this, BUTTON_path, "Browse...");
     m_finish = new wxButton(this, BUTTON_finish, "Finish");
@@ -188,15 +187,10 @@ UpdateFrame::UpdateFrame() : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
     path->Add(new wxStaticText(this, wxID_ANY, _T("Path:")));
     path->Add(path_file);
 
-    wxBoxSizer *visibility = new wxBoxSizer(wxHORIZONTAL);
-    visibility->Add(new wxStaticText(this, wxID_ANY, _T("Visibility:")));
-    visibility->Add(m_visibility);
-
     vertical->Add(name);
     vertical->Add(description);
     vertical->Add(preview);
     vertical->Add(language);
-    vertical->Add(visibility);
     vertical->Add(path);
     vertical->Add(m_finish);
 
