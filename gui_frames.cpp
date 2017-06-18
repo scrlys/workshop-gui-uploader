@@ -21,14 +21,8 @@ BEGIN_EVENT_TABLE(MainFrame, wxFrame)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(UpdateFrame, wxFrame)
-    EVT_TEXT(TEXT_name, UpdateFrame::OnUpdateName)
-    EVT_TEXT(TEXT_description, UpdateFrame::OnUpdateDescription)
-    EVT_TEXT(TEXT_preview, UpdateFrame::OnUpdatePreviewImage)
     EVT_BUTTON(BUTTON_preview, UpdateFrame::OnBrowsePreview)
-    EVT_COMBOBOX(COMBO_language, UpdateFrame::OnUpdateLanguage)
-    EVT_COMBOBOX(COMBO_visibility, UpdateFrame::OnUpdateVisibility)
-    EVT_TEXT(TEXT_path, UpdateFrame::OnUpdatePath)
-    EVT_BUTTON(BUTTON_path, UpdateFrame::OnBrowsePreview)
+    EVT_BUTTON(BUTTON_path, UpdateFrame::OnBrowsePath)
     EVT_BUTTON(BUTTON_finish, UpdateFrame::OnFinish)
 END_EVENT_TABLE()
 
@@ -109,44 +103,26 @@ MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uplo
     SetSizer(sizer);
 }
 
-void UpdateFrame::OnUpdateName(wxCommandEvent& event)
-{
-    std::cerr << "name\n";
-}
-
-void UpdateFrame::OnUpdateDescription(wxCommandEvent& event)
-{
-    std::cerr << "desc\n";
-}
-
-void UpdateFrame::OnUpdatePreviewImage(wxCommandEvent& event)
-{
-    std::cerr << "prevew\n";
-}
-
-void UpdateFrame::OnUpdateLanguage(wxCommandEvent& event)
-{
-    std::cerr << "language\n";
-}
-
-void UpdateFrame::OnUpdateVisibility(wxCommandEvent& event)
-{
-    std::cerr << "visibility\n";
-}
-
-void UpdateFrame::OnUpdatePath(wxCommandEvent& event)
-{
-    std::cerr << "update\n";
-}
-
 void UpdateFrame::OnBrowsePreview(wxCommandEvent& event)
 {
-    std::cerr << "browse preview\n";
+    wxFileDialog dialog(this, _T("Choose preview file"), wxEmptyString, wxEmptyString, "JPG image (*.jpg)|*.jpg|PNG image (*.png)|*.png|GIF image (*.gif)|*.gif");
+
+    if (dialog.ShowModal() == wxID_CANCEL) {
+        return;
+    }
+
+    m_preview_path->SetValue(dialog.GetPath());
 }
 
 void UpdateFrame::OnBrowsePath(wxCommandEvent& path)
 {
-    std::cerr << "browse path\n";
+    wxDirDialog dialog(this, _T("Choose path"), wxEmptyString, wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+
+    if (dialog.ShowModal() == wxID_CANCEL) {
+        return;
+    }
+
+    m_path_path->SetValue(dialog.GetPath());
 }
 
 void UpdateFrame::OnFinish(wxCommandEvent& event)

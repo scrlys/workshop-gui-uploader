@@ -63,13 +63,6 @@ public:
     wxButton *m_path_select;
     wxButton *m_finish;
 
-    void OnUpdateName(wxCommandEvent& event);
-    void OnUpdateDescription(wxCommandEvent& event);
-    void OnUpdatePreviewImage(wxCommandEvent& event);
-    void OnUpdateLanguage(wxCommandEvent& event);
-    void OnUpdateVisibility(wxCommandEvent& event);
-    void OnUpdatePath(wxCommandEvent& event);
-
     void OnBrowsePreview(wxCommandEvent& event);
     void OnBrowsePath(wxCommandEvent& event);
 
