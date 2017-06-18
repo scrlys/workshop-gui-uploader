@@ -142,7 +142,7 @@ std::vector<wxString> get_keys(std::map<std::string, std::string> map)
 UpdateFrame::UpdateFrame() : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
 {
     m_name = new wxTextCtrl(this, TEXT_name);
-    m_description = new wxTextCtrl(this, TEXT_description);
+    m_description = new wxTextCtrl(this, TEXT_description, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
     m_preview_path = new wxTextCtrl(this, wxID_ANY);
     m_preview_select = new wxButton(this, FILE_preview, "Browse...");
     m_language = new wxComboBox(this, COMBO_language, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, &get_keys(languages)[0], wxCB_READONLY);
