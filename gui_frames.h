@@ -28,6 +28,7 @@ class App : public wxApp
 {
 public:
     virtual bool OnInit();
+    virtual int OnExit();
 };
 
 class MainFrame : public wxFrame
@@ -37,7 +38,6 @@ public:
     wxButton *m_create;
     wxButton *m_update;
 
-    void OnExit(wxCommandEvent& event);
     void OnCreateItem(wxCommandEvent& event);
     void OnUpdateItem(wxCommandEvent& event);
 
@@ -51,6 +51,7 @@ class UpdateFrame : public wxFrame
 {
 public:
     WorkshopUploader *m_uploader;
+    bool m_initial;
 
     wxTextCtrl *m_name;
     wxTextCtrl *m_description;
@@ -69,5 +70,5 @@ public:
     wxDECLARE_EVENT_TABLE();
 
 public:
-    UpdateFrame(WorkshopUploader *uploader);
+    UpdateFrame(WorkshopUploader *uploader, bool initial);
 };

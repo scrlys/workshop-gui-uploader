@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <wx/wxprec.h>
-#include <wx/filepicker.h>
+#include <wx/event.h>
 
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
@@ -17,7 +17,6 @@ IMPLEMENT_APP(App)
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_BUTTON(BUTTON_Create, MainFrame::OnCreateItem)
     EVT_BUTTON(BUTTON_Update, MainFrame::OnUpdateItem)
-    EVT_MENU(wxID_EXIT, MainFrame::OnExit)
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE(UpdateFrame, wxFrame)
@@ -73,23 +72,22 @@ bool App::OnInit()
     return true;
 }
 
-void MainFrame::OnExit(wxCommandEvent& event)
+int App::OnExit()
 {
     SteamAPI_Shutdown();
-    Close(true);
+    return 0;
 }
 
 void MainFrame::OnCreateItem(wxCommandEvent& event)
 {
-    wxMessageBox(wxT("Created item"), wxT("Title"), wxICON_INFORMATION);
+
 }
 
 void MainFrame::OnUpdateItem(wxCommandEvent& event)
 {
-    //wxMessageBox(wxT("Updated item"), wxT("Title"), wxICON_INFORMATION);
-    UpdateFrame *update_frame = new UpdateFrame(m_uploader);
+    UpdateFrame *update_frame = new UpdateFrame(m_uploader, false);
     update_frame->Show(true);
-    //SetTopWindow(update_frame);
+    this->Close();
 }
 
 MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(new WorkshopUploader(app))
@@ -142,7 +140,7 @@ std::vector<wxString> get_keys(std::map<std::string, std::string> map)
     return result;
 }
 
-UpdateFrame::UpdateFrame(WorkshopUploader *uploader) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(uploader)
+UpdateFrame::UpdateFrame(WorkshopUploader *uploader, bool initial) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(uploader), m_initial(initial)
 {
     std::vector<wxString> display_languages = get_keys(languages);
 
