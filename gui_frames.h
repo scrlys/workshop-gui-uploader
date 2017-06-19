@@ -33,7 +33,7 @@ public:
 class MainFrame : public wxFrame
 {
 public:
-    WorkshopUploader m_uploader;
+    WorkshopUploader* m_uploader;
     wxButton *m_create;
     wxButton *m_update;
 
@@ -50,7 +50,7 @@ public:
 class UpdateFrame : public wxFrame
 {
 public:
-//    WorkshopUploader m_uploader;
+    WorkshopUploader *m_uploader;
 
     wxTextCtrl *m_name;
     wxTextCtrl *m_description;
@@ -67,6 +67,7 @@ public:
     void OnFinish(wxCommandEvent& event);
 
     wxDECLARE_EVENT_TABLE();
+
 public:
-    UpdateFrame();
+    UpdateFrame(WorkshopUploader *uploader);
 };
