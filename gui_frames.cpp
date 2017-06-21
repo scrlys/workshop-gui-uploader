@@ -5,6 +5,7 @@
 
 #include <wx/wxprec.h>
 #include <wx/event.h>
+#include <wx/msgdlg.h>
 
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
@@ -85,24 +86,39 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
         SteamAPI_RunCallbacks();
     }
     switch (m_workshop->GetResult()) {
-    case Success:
+    case Success: {
         std::cerr << "Success " << m_workshop->GetFileID() << "\n";
         break;
-    case ELegal:
+    }
+    case ELegal: {
+        wxMessageDialog *message = new wxMessageDialog(this, "You need to agree to the Steam Workshop legal agreement to continue. Would you like to open the browser to the legal agreement?", "Error", wxYES_NO | wxCANCEL | wxYES_DEFAULT | wxICON_ERROR);
+        if (message->ShowModal() == wxID_YES) {
+            wxLaunchDefaultBrowser("http://steamcommunity.com/sharedfiles/workshoplegalagreement");
+        }
+
         std::cerr << "Legal\n";
         break;
-    case EPermissions:
-        std::cerr << "Permissions\n";
+    }
+    case EPermissions: {
+        wxMessageDialog *message = new wxMessageDialog(this, "You do not have permission to upload the mod.", "Error", wxICON_ERROR);
+        message->ShowModal();
         break;
-    case ETimeout:
+    }
+    case ETimeout: {
+        wxMessageDialog *message = new wxMessageDialog(this, "A timeout occurred. Check your internet and Steam's status and try again in a few minutes.", "Error", wxICON_ERROR);
+        message->ShowModal();
         std::cerr << "Timeout\n";
         break;
-    case ELoggedOut:
-        std::cerr << "Logout\n";
+    }
+    case ELoggedOut: {
+        wxMessageDialog *message = new wxMessageDialog(this, "Please log on to Steam.", "Error", wxICON_ERROR);
+        message->ShowModal();
         break;
-    case EGeneral:
-        std::cerr << "General\n";
+    }
+    case EGeneral: {
+        wxMessageDialog *message = new wxMessageDialog(this, "A generic error has occured.", "Error", wxICON_ERROR);
         break;
+    }
     }
 }
 
