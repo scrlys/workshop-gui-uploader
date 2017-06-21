@@ -80,7 +80,30 @@ int App::OnExit()
 
 void MainFrame::OnCreateItem(wxCommandEvent& event)
 {
-    
+    m_workshop->CreateItem();
+    while (!m_workshop->IsFinished()) {
+        SteamAPI_RunCallbacks();
+    }
+    switch (m_workshop->GetResult()) {
+    case Success:
+        std::cerr << "Success " << m_workshop->GetFileID() << "\n";
+        break;
+    case ELegal:
+        std::cerr << "Legal\n";
+        break;
+    case EPermissions:
+        std::cerr << "Permissions\n";
+        break;
+    case ETimeout:
+        std::cerr << "Timeout\n";
+        break;
+    case ELoggedOut:
+        std::cerr << "Logout\n";
+        break;
+    case EGeneral:
+        std::cerr << "General\n";
+        break;
+    }
 }
 
 void MainFrame::OnUpdateItem(wxCommandEvent& event)
@@ -90,7 +113,7 @@ void MainFrame::OnUpdateItem(wxCommandEvent& event)
     this->Close();
 }
 
-MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
+MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_workshop(new CreateWorkshop(app))
 {
     m_create = new wxButton(this, BUTTON_Create, "Create a new mod");
     m_update = new wxButton(this, BUTTON_Update, "Update a pre-existing mod");

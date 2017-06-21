@@ -114,6 +114,7 @@ void CreateWorkshop::create_callback(CreateItemResult_t *result, bool failure)
                 m_result = ELoggedOut;
                 break;
             default:
+                m_result = Success;
                 m_fileid = result->m_nPublishedFileId;
                 break;
         }
