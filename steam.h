@@ -14,29 +14,26 @@ enum Result
     EGeneral
 };
 
-class WorkshopUploader
+class UpdateWorkshop
 {
 private:
-    AppId_t m_game;
     PublishedFileId_t m_fileid;
     UGCUpdateHandle_t m_handle;
+
+    AppId_t m_game;
+
+    std::string m_changelog;
 
     bool m_finished;
     Result m_result;
 
-    // Call results
-    // TODO: Is there a better way we can structure this?
-    CCallResult<WorkshopUploader, CreateItemResult_t> m_create_result;
-    CCallResult<WorkshopUploader, SubmitItemUpdateResult_t> m_update_result;
+    CCallResult<UpdateWorkshop, SubmitItemUpdateResult_t> m_update_result;
 
-    // Callback functions
-    void create_callback(CreateItemResult_t *result, bool failure);
     void submit_callback(SubmitItemUpdateResult_t *result, bool failure);
 
 public:
-    WorkshopUploader(AppId_t game);
+    UpdateWorkshop(PublishedFileId_t fileid, AppId_t game);
 
-    void CreateItem();
     void StartUpdateItem();
 
     bool SetTitle(std::string title);
@@ -44,12 +41,36 @@ public:
     bool SetPreviewImage(std::string image);
     bool SetLanguage(std::string language);
     bool SetVisibility(ERemoteStoragePublishedFileVisibility visibility);
+    void SetChangelog(std::string changelog);
 
     void FinishUpdateItem(std::string changelog);
 
-    // Getters
     bool IsFinished();
     Result GetResult();
+};
+
+class CreateWorkshop
+{
+private:
+    PublishedFileId_t m_fileid;
+    AppId_t m_game;
+
+    bool m_finished;
+    Result m_result;
+
+    CCallResult<CreateWorkshop, CreateItemResult_t> m_create_result;
+
+    void create_callback(CreateItemResult_t *result, bool failure);
+
+public:
+    CreateWorkshop(AppId_t game);
+
+    void CreateItem();
+
+    bool IsFinished();
+    Result GetResult();
+
+    PublishedFileId_t GetFileID();
 };
 
 AppId_t GetAppIdFromFile();

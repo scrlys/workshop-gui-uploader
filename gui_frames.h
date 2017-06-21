@@ -34,7 +34,8 @@ public:
 class MainFrame : public wxFrame
 {
 public:
-    WorkshopUploader* m_uploader;
+    CreateWorkshop *m_workshop;
+
     wxButton *m_create;
     wxButton *m_update;
 
@@ -50,7 +51,7 @@ public:
 class UpdateFrame : public wxFrame
 {
 public:
-    WorkshopUploader *m_uploader;
+    UpdateWorkshop *m_uploader;
     bool m_initial;
 
     wxTextCtrl *m_name;
@@ -70,5 +71,5 @@ public:
     wxDECLARE_EVENT_TABLE();
 
 public:
-    UpdateFrame(WorkshopUploader *uploader, bool initial);
+    UpdateFrame(PublishedFileId_t fileid, AppId_t app, bool initial);
 };

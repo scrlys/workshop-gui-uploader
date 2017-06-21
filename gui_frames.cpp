@@ -80,17 +80,17 @@ int App::OnExit()
 
 void MainFrame::OnCreateItem(wxCommandEvent& event)
 {
-
+    
 }
 
 void MainFrame::OnUpdateItem(wxCommandEvent& event)
 {
-    UpdateFrame *update_frame = new UpdateFrame(m_uploader, false);
+    UpdateFrame *update_frame = new UpdateFrame(946289437, GetAppIdFromFile(), false);
     update_frame->Show(true);
     this->Close();
 }
 
-MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(new WorkshopUploader(app))
+MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader")
 {
     m_create = new wxButton(this, BUTTON_Create, "Create a new mod");
     m_update = new wxButton(this, BUTTON_Update, "Update a pre-existing mod");
@@ -140,7 +140,7 @@ std::vector<wxString> get_keys(std::map<std::string, std::string> map)
     return result;
 }
 
-UpdateFrame::UpdateFrame(WorkshopUploader *uploader, bool initial) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(uploader), m_initial(initial)
+UpdateFrame::UpdateFrame(PublishedFileId_t fileid, AppId_t app, bool initial) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(new UpdateWorkshop(fileid, app)), m_initial(initial)
 {
     std::vector<wxString> display_languages = get_keys(languages);
 
