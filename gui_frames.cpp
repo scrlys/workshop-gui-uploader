@@ -2,6 +2,10 @@
 
 #include <map>
 #include <vector>
+#include <string>
+#include <sstream>
+#include <chrono>
+#include <thread>
 
 #include <wx/wxprec.h>
 #include <wx/event.h>
@@ -85,9 +89,13 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
     while (!m_workshop->IsFinished()) {
         SteamAPI_RunCallbacks();
     }
+
     switch (m_workshop->GetResult()) {
     case Success: {
-        std::cerr << "Success " << m_workshop->GetFileID() << "\n";
+        std::stringstream message;
+
+        message << "Your item ID is " << m_workshop->GetFileID() << ", please write the number down.";
+        wxMessageBox(message.str(), "Success!", wxOK | wxICON_INFORMATION);
         break;
     }
     case ELegal: {
@@ -96,27 +104,22 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
             wxLaunchDefaultBrowser("http://steamcommunity.com/sharedfiles/workshoplegalagreement");
         }
 
-        std::cerr << "Legal\n";
         break;
     }
     case EPermissions: {
-        wxMessageDialog *message = new wxMessageDialog(this, "You do not have permission to upload the mod.", "Error", wxICON_ERROR);
-        message->ShowModal();
+        wxMessageBox("You do not have permission to upload the mod.", "Error", wxICON_ERROR);
         break;
     }
     case ETimeout: {
-        wxMessageDialog *message = new wxMessageDialog(this, "A timeout occurred. Check your internet and Steam's status and try again in a few minutes.", "Error", wxICON_ERROR);
-        message->ShowModal();
-        std::cerr << "Timeout\n";
+        wxMessageBox("A timeout occurred. Check your internet and Steam's status and try again in a few minutes.", "Error", wxICON_ERROR);
         break;
     }
     case ELoggedOut: {
-        wxMessageDialog *message = new wxMessageDialog(this, "Please log on to Steam.", "Error", wxICON_ERROR);
-        message->ShowModal();
+        wxMessageBox("Please log on to Steam.", "Error", wxICON_ERROR);
         break;
     }
     case EGeneral: {
-        wxMessageDialog *message = new wxMessageDialog(this, "A generic error has occured.", "Error", wxICON_ERROR);
+        wxMessageBox("A generic error has occured.", "Error", wxICON_ERROR);
         break;
     }
     }
@@ -124,9 +127,19 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
 
 void MainFrame::OnUpdateItem(wxCommandEvent& event)
 {
-    UpdateFrame *update_frame = new UpdateFrame(946289437, GetAppIdFromFile(), false);
-    update_frame->Show(true);
-    this->Close();
+    wxTextEntryDialog *dialog = new wxTextEntryDialog(this, "Please enter the item ID", "Item ID");
+    dialog->SetTextValidator(wxFILTER_DIGITS);
+    if (dialog->ShowModal() == wxID_OK) {
+        std::stringstream string_to_publishedfileid;
+        PublishedFileId_t fileid;
+
+        string_to_publishedfileid << dialog->GetValue();
+        string_to_publishedfileid >> fileid;
+
+        UpdateFrame *update_frame = new UpdateFrame(fileid, GetAppIdFromFile(), false);
+        update_frame->Show(true);
+        this->Close();
+    }
 }
 
 MainFrame::MainFrame(AppId_t app) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_workshop(new CreateWorkshop(app))
@@ -164,7 +177,61 @@ void UpdateFrame::OnBrowsePath(wxCommandEvent& path)
 
 void UpdateFrame::OnFinish(wxCommandEvent& event)
 {
-    std::cerr << "finish\n";
+    if (!m_uploader->SetTitle(std::string(m_name->GetValue().mb_str()))) {
+        wxMessageBox("There was an error saving the title.", "Error", wxICON_ERROR);
+    }
+    if (!m_uploader->SetDescription(std::string(m_description->GetValue().mb_str()))) {
+        wxMessageBox("There was an error saving the description.", "Error", wxICON_ERROR);
+    }
+    if (!m_uploader->SetPreviewImage(std::string(m_preview_path->GetValue().mb_str()))) {
+        wxMessageBox("There was an error saving the preview.", "Error", wxICON_ERROR);
+    }
+    std::string language = languages[std::string(m_language->GetString(m_language->GetSelection()))];
+    std::cout << language << "\n";
+    if (!m_uploader->SetLanguage(language)) {
+        wxMessageBox("There was an error saving the description.", "Error", wxICON_ERROR);
+    }
+    if (m_initial) {
+        m_uploader->SetChangelog("Initial upload");
+    } else {
+        m_uploader->SetChangelog(std::string(wxGetTextFromUser("Please enter a changelog message", "Info")));
+    }
+
+    m_uploader->FinishUpdateItem();
+
+    while (!m_uploader->IsFinished()) {
+        SteamAPI_RunCallbacks();
+
+        // Fuck multithreading
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    switch (m_uploader->GetResult()) {
+    case Success: {
+        wxMessageBox("The mod has been successfully updated!", "Success!", wxICON_INFORMATION);
+        break;
+    }
+    case ELegal: {
+        wxMessageBox("You haven't accepted the Steam Workshop legal agreement.", "Error", wxICON_ERROR);
+        break;
+    }
+    case EPermissions: {
+        wxMessageBox("You don't have permissions to update the mod.", "Error", wxICON_ERROR);
+        break;
+    }
+    case ETimeout: {
+        wxMessageBox("A timeout occurred. Check your internet and Steam's status and try again in a few minutes.", "Error", wxICON_ERROR);
+        break;
+    }
+    case ELoggedOut: {
+        wxMessageBox("Please log on to Steam.", "Error", wxICON_ERROR);
+        break;
+    }
+    case EGeneral: {
+        wxMessageBox("A general error has occurred.", "Error", wxICON_ERROR);
+        break;
+    }
+    }
 }
 
 std::vector<wxString> get_keys(std::map<std::string, std::string> map)
@@ -181,6 +248,8 @@ std::vector<wxString> get_keys(std::map<std::string, std::string> map)
 
 UpdateFrame::UpdateFrame(PublishedFileId_t fileid, AppId_t app, bool initial) : wxFrame(NULL, wxID_ANY, "Steam Workshop Uploader"), m_uploader(new UpdateWorkshop(fileid, app)), m_initial(initial)
 {
+    m_uploader->StartUpdateItem();
+
     std::vector<wxString> display_languages = get_keys(languages);
 
     m_name = new wxTextCtrl(this, TEXT_name);
@@ -191,6 +260,11 @@ UpdateFrame::UpdateFrame(PublishedFileId_t fileid, AppId_t app, bool initial) : 
     m_path_path = new wxTextCtrl(this, TEXT_path);
     m_path_select = new wxButton(this, BUTTON_path, "Browse...");
     m_finish = new wxButton(this, BUTTON_finish, "Finish");
+
+    m_name->SetMaxLength(k_cchPublishedDocumentTitleMax);
+
+    // TODO: Submit bug report
+    //m_description->SetMaxLength(k_cchPublishedDocumentDescriptionMax);
 
     m_language->SetSelection(m_language->FindString("English"));
 

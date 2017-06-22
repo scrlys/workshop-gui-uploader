@@ -11,12 +11,8 @@ void UpdateWorkshop::submit_callback(SubmitItemUpdateResult_t *result, bool fail
 
     if (failure) {
         m_result = EGeneral;
-        m_finished = true;
-        return;
     } else if (result->m_bUserNeedsToAcceptWorkshopLegalAgreement) {
         m_result = ELegal;
-        m_finished = true;
-        return;
     } else {
         switch (result->m_eResult) {
             case k_EResultInsufficientPrivilege:
@@ -77,10 +73,10 @@ void UpdateWorkshop::SetChangelog(std::string changelog)
     m_changelog = changelog;
 }
 
-void UpdateWorkshop::FinishUpdateItem(std::string changelog)
+void UpdateWorkshop::FinishUpdateItem()
 {
     std::cerr << "Finishing update\n";
-    SteamAPICall_t call = SteamUGC()->SubmitItemUpdate(m_handle, changelog.c_str());
+    SteamAPICall_t call = SteamUGC()->SubmitItemUpdate(m_handle, m_changelog.c_str());
     m_update_result.Set(call, this, &UpdateWorkshop::submit_callback);
 }
 

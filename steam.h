@@ -43,7 +43,7 @@ public:
     bool SetVisibility(ERemoteStoragePublishedFileVisibility visibility);
     void SetChangelog(std::string changelog);
 
-    void FinishUpdateItem(std::string changelog);
+    void FinishUpdateItem();
 
     bool IsFinished();
     Result GetResult();
