@@ -24,7 +24,7 @@ private:
 
     std::string m_changelog;
 
-    bool m_finished;
+    bool m_finished = false;
     Result m_result;
 
     CCallResult<UpdateWorkshop, SubmitItemUpdateResult_t> m_update_result;
@@ -55,7 +55,7 @@ private:
     PublishedFileId_t m_fileid;
     AppId_t m_game;
 
-    bool m_finished;
+    bool m_finished = false;
     Result m_result;
 
     CCallResult<CreateWorkshop, CreateItemResult_t> m_create_result;

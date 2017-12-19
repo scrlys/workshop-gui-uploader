@@ -109,10 +109,14 @@ void CreateWorkshop::create_callback(CreateItemResult_t *result, bool failure)
             case k_EResultNotLoggedOn:
                 m_result = ELoggedOut;
                 break;
-            default:
+            case k_EResultOK:
                 m_result = Success;
                 m_fileid = result->m_nPublishedFileId;
                 break;
+			default:
+				std::cerr << "What?\n";
+				m_result = EGeneral;
+				break;
         }
     }
 
@@ -125,7 +129,7 @@ CreateWorkshop::CreateWorkshop(AppId_t game) : m_game(game)
 
 void CreateWorkshop::CreateItem()
 {
-    std::cerr << "Creating item\n";
+    std::cerr << "Creating item\na";
 
     SteamAPICall_t result = SteamUGC()->CreateItem(m_game, k_EWorkshopFileTypeCommunity);
     m_create_result.Set(result, this, &CreateWorkshop::create_callback);

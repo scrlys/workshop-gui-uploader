@@ -1,6 +1,14 @@
-libsteam_api.so
-steam_appid.txt
+obj/
+.vs/
+bin/
 
-# This is the developer's gitignore for personal use
-.ycm_extra_conf.py
-builds/
+lib/vc_lib/**/*
+!lib/vc_lib/README
+libs/windows/**/*
+!libs/windows/README
+include/msvc/**/*
+!include/msvc/README
+include/steam/**/*
+!include/steam/README
+include/wx/**/*
+!include/wx/README

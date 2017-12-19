@@ -1,0 +1,2 @@
+lib/vc_lib
+Unfortunately wxWidgets has this outside include. 

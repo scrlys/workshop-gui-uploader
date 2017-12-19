@@ -1,0 +1,3 @@
+include/msvc
+This folder should have only one file (for windows at least)
+include/msvc/wx/setup.h

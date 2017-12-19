@@ -6,6 +6,7 @@
 #include <sstream>
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 #include <wx/wxprec.h>
 #include <wx/event.h>
@@ -87,8 +88,13 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
 {
     m_workshop->CreateItem();
     while (!m_workshop->IsFinished()) {
+		// Fuck multithreading
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+		std::cerr << ".";
         SteamAPI_RunCallbacks();
     }
+	std::cerr << "\n";
 
     switch (m_workshop->GetResult()) {
     case Success: {
@@ -96,6 +102,7 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
 
         message << "Your item ID is " << m_workshop->GetFileID() << ", please write the number down.";
         wxMessageBox(message.str(), "Success!", wxOK | wxICON_INFORMATION);
+		std::cout << "Woo!\n";
         break;
     }
     case ELegal: {
@@ -104,22 +111,27 @@ void MainFrame::OnCreateItem(wxCommandEvent& event)
             wxLaunchDefaultBrowser("http://steamcommunity.com/sharedfiles/workshoplegalagreement");
         }
 
+		std::cout << "Legal\n";
         break;
     }
     case EPermissions: {
         wxMessageBox("You do not have permission to upload the mod.", "Error", wxICON_ERROR);
+		std::cout << "Permissions\n";
         break;
     }
     case ETimeout: {
         wxMessageBox("A timeout occurred. Check your internet and Steam's status and try again in a few minutes.", "Error", wxICON_ERROR);
+		std::cout << "Timeout\n";
         break;
     }
     case ELoggedOut: {
         wxMessageBox("Please log on to Steam.", "Error", wxICON_ERROR);
+		std::cout << "Logged Out\n";
         break;
     }
     case EGeneral: {
         wxMessageBox("A generic error has occured.", "Error", wxICON_ERROR);
+		std::cout << "Generic\n";
         break;
     }
     }
