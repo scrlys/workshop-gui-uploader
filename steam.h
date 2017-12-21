@@ -41,6 +41,7 @@ public:
     bool SetPreviewImage(std::string image);
     bool SetLanguage(std::string language);
     bool SetVisibility(ERemoteStoragePublishedFileVisibility visibility);
+	bool SetItemContent(std::string path);
     void SetChangelog(std::string changelog);
 
     void FinishUpdateItem();

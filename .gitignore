@@ -2,6 +2,11 @@ obj/
 .vs/
 bin/
 
+workshop-gui-uploader.VC.VC.opendb
+workshop-gui-uploader.VC.db
+workshop-gui-uploader.sln
+workshop-gui-uploader.vcxproj
+
 lib/vc_lib/**/*
 !lib/vc_lib/README
 libs/windows/**/*

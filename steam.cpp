@@ -68,10 +68,16 @@ bool UpdateWorkshop::SetVisibility(ERemoteStoragePublishedFileVisibility visibil
     return SteamUGC()->SetItemVisibility(m_handle, visibility);
 }
 
+bool UpdateWorkshop::SetItemContent(std::string path) {
+	return SteamUGC()->SetItemContent(m_handle, path.c_str());
+}
+
 void UpdateWorkshop::SetChangelog(std::string changelog)
 {
     m_changelog = changelog;
 }
+
+
 
 void UpdateWorkshop::FinishUpdateItem()
 {

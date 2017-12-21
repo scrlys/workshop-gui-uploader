@@ -203,10 +203,16 @@ void UpdateFrame::OnFinish(wxCommandEvent& event)
     if (!m_uploader->SetLanguage(language)) {
         wxMessageBox("There was an error saving the description.", "Error", wxICON_ERROR);
     }
+
+	if (!m_uploader->SetItemContent(std::string(m_path_path->GetValue().mb_str()))) {
+		wxMessageBox("There was an error uploading the files.", "Error", wxICON_ERROR);
+	}
+
     if (m_initial) {
         m_uploader->SetChangelog("Initial upload");
     } else {
-        m_uploader->SetChangelog(std::string(wxGetTextFromUser("Please enter a changelog message", "Info")));
+		wxString str = wxGetTextFromUser("Please enter a changelog message", "Info");
+        m_uploader->SetChangelog(std::string(str));
     }
 
     m_uploader->FinishUpdateItem();
