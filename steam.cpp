@@ -10,24 +10,11 @@ void UpdateWorkshop::submit_callback(SubmitItemUpdateResult_t *result, bool fail
     std::cerr << "Submit callback called\n";
 
     if (failure) {
-        m_result = EGeneral;
+        m_result = k_EResultFail;
     } else if (result->m_bUserNeedsToAcceptWorkshopLegalAgreement) {
-        m_result = ELegal;
+        m_result = (EResult) 0;
     } else {
-        switch (result->m_eResult) {
-            case k_EResultInsufficientPrivilege:
-                m_result = EPermissions;
-                break;
-            case k_EResultTimeout:
-                m_result = ETimeout;
-                break;
-            case k_EResultNotLoggedOn:
-                m_result = ELoggedOut;
-                break;
-            default:
-                m_result = Success;
-                break;
-        }
+		m_result = result->m_eResult;
     }
 
     m_finished = true;
@@ -81,9 +68,9 @@ void UpdateWorkshop::SetChangelog(std::string changelog)
 
 void UpdateWorkshop::FinishUpdateItem()
 {
-    std::cerr << "Finishing update\n";
-    SteamAPICall_t call = SteamUGC()->SubmitItemUpdate(m_handle, m_changelog.c_str());
-    m_update_result.Set(call, this, &UpdateWorkshop::submit_callback);
+	std::cerr << "Finishing update\n";
+	SteamAPICall_t call = SteamUGC()->SubmitItemUpdate(m_handle, m_changelog.c_str());
+	m_update_result.Set(call, this, &UpdateWorkshop::submit_callback);
 }
 
 bool UpdateWorkshop::IsFinished()
@@ -91,9 +78,29 @@ bool UpdateWorkshop::IsFinished()
     return m_finished;
 }
 
-Result UpdateWorkshop::GetResult()
+EResult UpdateWorkshop::GetResult()
 {
     return m_result;
+}
+
+void UpdateWorkshop::UpdateStats()
+{
+	m_status = SteamUGC()->GetItemUpdateProgress(m_handle, &m_bytes_uploaded, &m_bytes_total);
+}
+
+uint64 UpdateWorkshop::GetUploadedBytes()
+{
+	return m_bytes_uploaded;
+}
+
+uint64 UpdateWorkshop::GetTotalBytes()
+{
+	return m_bytes_total;
+}
+
+EItemUpdateStatus UpdateWorkshop::GetStatus()
+{
+	return m_status;
 }
 
 void CreateWorkshop::create_callback(CreateItemResult_t *result, bool failure)

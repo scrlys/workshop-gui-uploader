@@ -1,3 +1,4 @@
+/*
 #include "gui_frames.h"
 
 #include <map>
@@ -17,8 +18,10 @@
 #endif
 
 #include "steam.h"
+#include "splash.h"
+#include "loading.h"
 
-IMPLEMENT_APP(App)
+//IMPLEMENT_APP(App)
 
 BEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_BUTTON(BUTTON_Create, MainFrame::OnCreateItem)
@@ -31,58 +34,7 @@ BEGIN_EVENT_TABLE(UpdateFrame, wxFrame)
     EVT_BUTTON(BUTTON_finish, UpdateFrame::OnFinish)
 END_EVENT_TABLE()
 
-std::map<std::string, std::string> languages;
-
-bool App::OnInit()
-{
-    SteamAPI_Init();
-    if (!SteamUGC()) {
-        // Ensure that Steam loaded
-        wxMessageBox(_T("Steam failed to load. Please ensure Steam is running and steam_appid.txt exists in the same folder the application exists"), _T("Error!"), wxICON_ERROR);
-        return false;
-    }
-
-    languages = std::map<std::string, std::string>();
-    languages["English"] = "english";
-    languages["Arabic"] = "arabic";
-    languages["Bulgarian"] = "bulgarian";
-    languages["Chinese (Simplified)"] = "schinese";
-    languages["Chinese (Traditional)"] = "tchinese";
-    languages["Czech"] = "czech";
-    languages["Danish"] = "danish";
-    languages["Dutch"] = "dutch";
-    languages["Finnish"] = "finnish";
-    languages["French"] = "french";
-    languages["German"] = "german";
-    languages["Greek"] = "greek";
-    languages["Hungarian"] = "hungarian";
-    languages["Italian"] = "italian";
-    languages["Japanese"] = "japanese";
-    languages["Korean"] = "koreana";
-    languages["Norwegian"] = "norwegian";
-    languages["Polish"] = "polish";
-    languages["Portuguese"] = "portuguese";
-    languages["Portuguese-Brazil"] = "brazilian";
-    languages["Romanian"] = "romanian";
-    languages["Russian"] = "russian";
-    languages["Spanish"] = "spanish";
-    languages["Swedish"] = "swedish";
-    languages["Thai"] = "thai";
-    languages["Turkish"] = "turkish";
-    languages["Ukrainian"] = "ukrainian";
-
-    MainFrame *main_frame = new MainFrame(GetAppIdFromFile());
-    main_frame->Show(true);
-    SetTopWindow(main_frame);
-
-    return true;
-}
-
-int App::OnExit()
-{
-    SteamAPI_Shutdown();
-    return 0;
-}
+//std::map<std::string, std::string> languages;
 
 void MainFrame::OnCreateItem(wxCommandEvent& event)
 {
@@ -149,7 +101,9 @@ void MainFrame::OnUpdateItem(wxCommandEvent& event)
         string_to_publishedfileid >> fileid;
 
         UpdateFrame *update_frame = new UpdateFrame(fileid, GetAppIdFromFile(), false);
-        update_frame->Show(true);
+        update_frame->Show();
+
+		
         this->Close();
     }
 }
@@ -325,3 +279,4 @@ UpdateFrame::UpdateFrame(PublishedFileId_t fileid, AppId_t app, bool initial) : 
 
     SetSizer(vertical);
 }
+*/

@@ -11,7 +11,9 @@ enum Result
     EPermissions,
     ETimeout,
     ELoggedOut,
-    EGeneral
+    EGeneral,
+	ENotFound,
+	ELimit,
 };
 
 class UpdateWorkshop
@@ -25,7 +27,11 @@ private:
     std::string m_changelog;
 
     bool m_finished = false;
-    Result m_result;
+    EResult m_result;
+
+	EItemUpdateStatus m_status;
+	uint64 m_bytes_uploaded;
+	uint64 m_bytes_total;
 
     CCallResult<UpdateWorkshop, SubmitItemUpdateResult_t> m_update_result;
 
@@ -47,7 +53,12 @@ public:
     void FinishUpdateItem();
 
     bool IsFinished();
-    Result GetResult();
+    EResult GetResult();
+
+	void UpdateStats();
+	uint64 GetUploadedBytes();
+	uint64 GetTotalBytes();
+	EItemUpdateStatus GetStatus();
 };
 
 class CreateWorkshop
